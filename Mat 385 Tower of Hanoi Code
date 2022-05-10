@@ -1,0 +1,243 @@
+import java.util.Objects;
+import java.util.Scanner;
+
+public class TowerOfHanoi {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        int disks;
+        int count = 0;
+
+        System.out.println("Enter the amount of disks you would like to play with (4 - 6): ");
+        disks = input.nextInt();
+        int[] rod1 = new int[disks];
+        int[] rod2 = new int[disks];
+        int[] rod3 = new int[disks];
+        while (disks < 4 || disks > 6){
+            System.out.print("Try again, Enter the amount of disks you want to use between 4 and 6: ");
+            disks = input.nextInt();
+            if(disks >= 4 && disks <= 6){
+                System.out.println("Thank you for entering " + disks + " disks");
+            }
+        }
+        System.out.println("You have chose " + disks + " disks to play with.");
+        System.out.println("Are you ready to play? ");
+        String answer = input.next();
+        if (Objects.equals(answer, "Yes") || Objects.equals(answer, "Y") || Objects.equals(answer, "y") || Objects.equals(answer, "yes")){
+            System.out.println("Understood, then let's begin!");
+            System.out.println("In this game you will have three rods vertically connected to a rectangular platform labeled from left to right, 1, 2 and 3.");
+            System.out.println("The game starts with however many disks you chose (" + disks + ") on rod 2 in the middle");
+            System.out.println("You are allowed to move one disk from one rod to another rod once per turn. But you are not allowed to play a disk on a rod ");
+            System.out.println("that is larger than the currently top disk located on the rod you want it to be moved to.");
+            System.out.println("Now let's start");
+        } else {
+            while (!Objects.equals(answer, "Yes")){
+                System.out.println("Say Yes when you are ready to play: ");
+                answer = input.next();
+            }
+        }
+        rod2 = setrod(disks);
+        //bottom starts at the num disks and goes up by one everytime
+        for(int i = 0; i < disks; i++){
+            rod1[i] = 0;
+            rod3[i] = 0;
+        }
+        int var = 3;
+        boolean won = false;
+        int rod;
+        int disk;
+        int temp;
+        int rodtemp;
+        int temp2;
+
+
+
+        while( var >= 1 && var <= 5 && won == false){
+            printMenu();
+            var = input.nextInt();
+            switch (var) {
+                case 1:
+                    System.out.println("From which rod do you want to move the disk from: ");
+                    rod = input.nextInt();
+                    System.out.println("What disk would you like to move?");
+                    disk = input.nextInt();
+                    System.out.println("Which rod would you like it to move to?");
+                    rodtemp = input.nextInt();
+                    if(rod <= 0 || rod > 3){
+                        System.out.println("[rod does not exist]");
+                    }
+                    else if(rod == 1 && indexAt(rod1, disk) >= 0){
+                        rod1[indexAt(rod1, disk)] = 0;
+                        if(rodtemp == 2){
+                            rod2[match(rod2, disk)] = disk;
+                            count++;
+                        } else if (rodtemp == 3){
+                            rod3[match(rod3, disk)] = disk;
+                            count++;
+                        } else{
+                            System.out.println("Error occurred");
+                        }
+
+                    }
+                    else if(rod == 2 && indexAt(rod2, disk) >= 0){
+                        rod2[indexAt(rod2, disk)] = 0;
+                        if(rodtemp == 1){
+                            rod1[match(rod1, disk)] = disk;
+                            count++;
+                        } else if (rodtemp == 3){
+                            rod3[match(rod3, disk)] = disk;
+                            count++;
+                        } else {
+                            System.out.println("Error occurred");
+                        }
+
+                    } else if(rod == 3 && indexAt(rod3, disk) >= 0){
+                        rod3[indexAt(rod3, disk)] = 0;
+                        if(rodtemp == 1){
+                            rod1[match(rod1, disk)] = disk;
+                            count++;
+                        } else if (rodtemp == 2){
+                            rod2[match(rod2, disk)] = disk;
+                            count++;
+                        } else {
+                            System.out.println("Error occurred");
+                        }
+
+                    } else {
+                        System.out.println("Disk does not exist on that rod");
+                    }
+                    break;
+                case 2:
+                    results(rod1, rod2, rod3);
+                    break;
+                case 3:
+                    System.out.println(count + " turns have passed so far");
+                    break;
+                case 4:
+                    if(doesWin(rod1, rod2, rod3) == true){
+                        System.out.println("true");
+                    } else {
+                        System.out.println("false");
+                    }
+                    break;
+                case 5:
+                    printInstruct(disks);
+                    break;
+                case 6:
+                    break;
+                default:
+                    System.out.println("You have entered an invalid number");
+                    break;
+            }
+            if (var == 4 && doesWin(rod1, rod2, rod3)) {
+                System.out.println("You have won!");
+                won = true;
+            }
+        }
+        System.out.println("The End");
+
+    }
+
+    public static int indexAt(int[] arr, int val){
+        int num = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] == val ){
+                num = i;
+                if((i == arr.length - 1) || arr[i + 1] == 0) {
+                    return num;
+                } else {
+                    return -1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static int match(int[] arr, int num){
+        int val;
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] == 0){
+                if(i == 0 || (arr[i - 1] > num)){
+                    val = i;
+                    return val;
+                }
+
+            }
+        }
+        return -1;
+    }
+
+    public static void printInstruct(int disks){
+        System.out.println("In this game you will have three rods vertically connected to a rectangular platform labeled from left to right, 1, 2 and 3.");
+        System.out.println("The game starts with however many disks you chose (" + disks + ") on rod 2 in the middle");
+        System.out.println("You are allowed to move one disk from one rod to another rod once per turn. But you are not allowed to play a disk on a rod ");
+        System.out.println("that is larger than the currently top disk located on the rod you want it to be moved to.");
+    }
+
+    public static boolean doesWin(int[] one, int[] two, int[] three){
+        if(win(one) == true|| win(three) == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static boolean win(int[] arr){
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void printMenu(){
+        System.out.println("1. Move a disk");
+        System.out.println("2. See the currently located disks on the rods");
+        System.out.println("3. See how many turns have passed ");
+        System.out.println("4. Test if you are able to win");
+        System.out.println("5. See the instructions again");
+        System.out.println("6. Exit game");
+        System.out.println("What would you like to do?");
+    }
+
+    public static int[] setrod(int integer){
+        int tick = integer;
+        int[] arr = new int[integer];
+        for(int i = 0; i < arr.length; i++){
+            arr[i] = tick;
+            tick--;
+        }
+        return arr;
+
+    }
+
+    public static void check(int[] arr){
+        for(int i = arr.length - 1; i >= 0; i--){
+            if(arr[i] != 0){
+                System.out.print(arr[i] + " ");
+            }
+        }
+        if(arr[0] == 0){
+            System.out.print("None");
+        }
+
+
+    }
+
+    public static void results(int[] one, int[] two, int[] three){
+        System.out.println("Rod 1 has rings: ");
+        check(one);
+        System.out.println();
+        System.out.println("Rod 2 has rings: ");
+        check(two);
+        System.out.println();
+        System.out.println("Rod 3 has rings: ");
+        check(three);
+        System.out.println();
+    }
+
+
+
+}

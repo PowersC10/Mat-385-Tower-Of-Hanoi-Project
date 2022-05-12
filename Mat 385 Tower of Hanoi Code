@@ -10,9 +10,13 @@ public class TowerOfHanoi {
 
         System.out.println("Enter the amount of disks you would like to play with (4 - 6): ");
         disks = input.nextInt();
-        int[] rod1 = new int[disks];
-        int[] rod2 = new int[disks];
-        int[] rod3 = new int[disks];
+        int[] rod1 = new int[disks]; 
+        // initialize first pole
+        int[] rod2 = new int[disks]; 
+        // initialize second pole
+        int[] rod3 = new int[disks]; 
+        // initialize third pole
+        // while loop in case the int is out of bounds
         while (disks < 4 || disks > 6){
             System.out.print("Try again, Enter the amount of disks you want to use between 4 and 6: ");
             disks = input.nextInt();
@@ -23,6 +27,7 @@ public class TowerOfHanoi {
         System.out.println("You have chose " + disks + " disks to play with.");
         System.out.println("Are you ready to play? ");
         String answer = input.next();
+        //the instructions once they accept to play the game
         if (Objects.equals(answer, "Yes") || Objects.equals(answer, "Y") || Objects.equals(answer, "y") || Objects.equals(answer, "yes")){
             System.out.println("Understood, then let's begin!");
             System.out.println("In this game you will have three rods vertically connected to a rectangular platform labeled from left to right, 1, 2 and 3.");
@@ -36,12 +41,15 @@ public class TowerOfHanoi {
                 answer = input.next();
             }
         }
+        // initializing the middle rod
         rod2 = setrod(disks);
         //bottom starts at the num disks and goes up by one everytime
         for(int i = 0; i < disks; i++){
+            // initializing all rods to be all 0's
             rod1[i] = 0;
             rod3[i] = 0;
         }
+        // setting up many future variables
         int var = 3;
         boolean won = false;
         int rod;
@@ -53,6 +61,7 @@ public class TowerOfHanoi {
 
 
         while( var >= 1 && var <= 5 && won == false){
+            // loop will continue as long as the integer is a valid integer or they quit the game or win
             printMenu();
             var = input.nextInt();
             switch (var) {
@@ -63,6 +72,7 @@ public class TowerOfHanoi {
                     disk = input.nextInt();
                     System.out.println("Which rod would you like it to move to?");
                     rodtemp = input.nextInt();
+                    // many tests to see if the placements are valid
                     if(rod <= 0 || rod > 3){
                         System.out.println("[rod does not exist]");
                     }
@@ -108,12 +118,15 @@ public class TowerOfHanoi {
                     }
                     break;
                 case 2:
+                    // displaying the rods using the public voids
                     results(rod1, rod2, rod3);
                     break;
                 case 3:
+                    // count integer to measure turns passed
                     System.out.println(count + " turns have passed so far");
                     break;
                 case 4:
+                    // running a boolean to see if the statement is true
                     if(doesWin(rod1, rod2, rod3) == true){
                         System.out.println("true");
                     } else {
@@ -121,9 +134,11 @@ public class TowerOfHanoi {
                     }
                     break;
                 case 5:
+                    // simple public void to print out instructions when called upon
                     printInstruct(disks);
                     break;
                 case 6:
+                    // breaks the user out of the loop and ends the game
                     break;
                 default:
                     System.out.println("You have entered an invalid number");
@@ -132,6 +147,7 @@ public class TowerOfHanoi {
             if (var == 4 && doesWin(rod1, rod2, rod3)) {
                 System.out.println("You have won!");
                 won = true;
+                // if they enter 6 and win it breaks the loop and ends the game
             }
         }
         System.out.println("The End");
